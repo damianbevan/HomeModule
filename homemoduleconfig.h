@@ -1,6 +1,8 @@
 /* Configuration file for the home modeul code.
  * Contains configuration and properties that should
- * not be added to source control. * 
+ * not be added to source control.
+ *
+ * Add to ignore files. 
  */
 #ifndef homemoduleconfig_h
 #define homemoduleconfig_h

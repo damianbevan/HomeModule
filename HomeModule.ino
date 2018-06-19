@@ -17,7 +17,6 @@
 void mqCallback(char* topic, byte* payload, unsigned int length);
 
 /* MQTT Constants */
-HomeModule homeModule( HM_MQTT_SERVER, mqCallback );
 //const char* MQTT_REGISTRATION_TOPIC = HM_MQTT_REGISTRATION_TOPIC;     // The name of the registration topic
 //const char* MQTT_SERVER = HM_MQTT_SERVER;                             // The MQTT broker hostname
 //const int REGISTER_POLL_MILLISECONDS = HM_REGISTER_POLL_MILLISECONDS; // The frequency the device publishes a registration message
@@ -28,10 +27,13 @@ const char* DEVICE_TYPE = HM_DEVICE_TYPE_TEST;        // The device type
 const char* DEVICE_LOCATION = HM_LOCATION_LIVINGROOM; // The location of this device
 const char* DEVICE_KEY = HM_DEVICE_1_JWT_KEY;         // Device JWT authn/authz key
 
-/* Local Variables */
+/* Global objects */
 ESP8266WiFiMulti wifiMulti;
 WiFiClient espClient;
+HomeModule homeModule( HM_MQTT_SERVER, mqCallback, espClient );
 //PubSubClient mqClient(espClient);
+
+/* Local Variables */
 //long lastRegister = 0;
 
 void setup() {
@@ -56,7 +58,7 @@ void mqCallback(char* topic, byte* payload, unsigned int length)
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
-  for (int i = 0; i < length; i++) {
+  for (unsigned int i = 0; i < length; i++) {
     Serial.print((char)payload[i]);
   }
   Serial.println();

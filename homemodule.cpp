@@ -8,21 +8,22 @@
 #include <PubSubClient.h>
 
 // Constructor taking name of the MQTT server
-HomeModule::HomeModule(const char* mqttServer)
+HomeModule::HomeModule(const char* mqttServer, WiFiClient espClient)
 {
-  localSetup(mqttServer);
+  localSetup(mqttServer, espClient);
 }
 
 // Constructor will callback for subscription
-HomeModule::HomeModule(const char* mqttServer, MQTT_CALLBACK_SIGNATURE)
+HomeModule::HomeModule(const char* mqttServer, MQTT_CALLBACK_SIGNATURE, WiFiClient espClient)
 {
-  localSetup(mqttServer);
+  localSetup(mqttServer, espClient);
   _mqClient->setCallback(callback);
 }
 
-void HomeModule::localSetup(const char* mqttServer)
+void HomeModule::localSetup(const char* mqttServer, WiFiClient espClient)
 {
   _mqttServer = mqttServer;
+  _mqClient = new PubSubClient( espClient );
   _mqClient->setServer(_mqttServer, 1883);
   _pollTime = HM_REGISTER_POLL_MILLISECONDS;
 }
@@ -35,6 +36,7 @@ boolean HomeModule::setupHomeModule(const char* deviceName, const char* deviceTy
     _location = deviceLocation;
     _address = deviceAddress;
     _lastRegister = 0;
+    return true;
 }
 
 boolean HomeModule::loop()
@@ -44,6 +46,7 @@ boolean HomeModule::loop()
   } else {
     registerDevice();
   }
+  return true;
 }
 
 // Connect to MQTT. Subscribe to topic home/DEVICE_LOCATION/DEVICE_TYPE/MDNS_NAME

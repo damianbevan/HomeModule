@@ -20,9 +20,9 @@ class HomeModule
 {
   public:
     // Constructor for HomeModule
-    HomeModule( const char* mqttServer, WiFiClient );
+    HomeModule( const char* mqttServer, WiFiClient& );
 
-    HomeModule( const char* mqttServer, MQTT_CALLBACK_SIGNATURE, WiFiClient );
+    HomeModule( const char* mqttServer, MQTT_CALLBACK_SIGNATURE, WiFiClient& );
     
     // Register the Home Module with the server
     boolean setupHomeModule(const char* deviceName, const char* deviceType, const char* deviceLocation, IPAddress deviceAddress);
@@ -31,7 +31,7 @@ class HomeModule
     boolean loop();
 
   private:
-    void localSetup(const char* mqttServer, WiFiClient espClient );
+    void localSetup(const char* mqttServer, WiFiClient& espClient );
     void reconnect();
     void registerDevice();
     const char* _mqttServer;

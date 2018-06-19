@@ -104,13 +104,14 @@ void setupGPIO()
   digitalWrite(D7, LOW);
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
+  Serial.println("Set up GPIO");
 }
 
 void setupWifi()
 {
   // Add wifi Access Points to wifi
-    //wifiMulti.addAP( HM_WIFI_SSID_PHONE, HM_WIFI_PWD_PHONE ); // Phone
-    wifiMulti.addAP( HM_WIFI_SSID_HOME, HM_WIFI_PWD_HOME ); // Home
+    wifiMulti.addAP( HM_WIFI_SSID_PHONE, HM_WIFI_PWD_PHONE ); // Phone
+    //wifiMulti.addAP( HM_WIFI_SSID_HOME, HM_WIFI_PWD_HOME ); // Home
   
   // Connect to WiFi network
   Serial.print("Connecting to wifi...");
@@ -177,6 +178,7 @@ void registerDevice()
 */
 void loop()
 {
+  //Serial.println("Looping");
   homeModule.loop();
   delay(10);
   //server.handleClient();

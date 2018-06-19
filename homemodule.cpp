@@ -8,19 +8,19 @@
 #include <PubSubClient.h>
 
 // Constructor taking name of the MQTT server
-HomeModule::HomeModule(const char* mqttServer, WiFiClient espClient)
+HomeModule::HomeModule(const char* mqttServer, WiFiClient& espClient)
 {
   localSetup(mqttServer, espClient);
 }
 
 // Constructor will callback for subscription
-HomeModule::HomeModule(const char* mqttServer, MQTT_CALLBACK_SIGNATURE, WiFiClient espClient)
+HomeModule::HomeModule(const char* mqttServer, MQTT_CALLBACK_SIGNATURE, WiFiClient& espClient)
 {
   localSetup(mqttServer, espClient);
   _mqClient->setCallback(callback);
 }
 
-void HomeModule::localSetup(const char* mqttServer, WiFiClient espClient)
+void HomeModule::localSetup(const char* mqttServer, WiFiClient& espClient)
 {
   _mqttServer = mqttServer;
   _mqClient = new PubSubClient( espClient );
@@ -30,20 +30,29 @@ void HomeModule::localSetup(const char* mqttServer, WiFiClient espClient)
 
 boolean HomeModule::setupHomeModule(const char* deviceName, const char* deviceType, const char* deviceLocation, IPAddress deviceAddress)
 {
-    Serial.print("Setting up home module");
+    Serial.println("Setting up home module");
     _name = deviceName;
     _type = deviceType;
     _location = deviceLocation;
     _address = deviceAddress;
     _lastRegister = 0;
+    char message[100];
+    Serial.print("Set up home module with ");
+    sprintf( message, "DeviceName=%s, DeviceType=%s, DeviceLocation=%s", _name, _type, _location );
+    Serial.println( message );
+    Serial.print( "IPAddress=" );
+    Serial.println( _address );
     return true;
 }
 
 boolean HomeModule::loop()
 {
+  //Serial.println("Looping in Home Module");
   if ( !_mqClient->loop() ) {
+    Serial.println("Reconnect to MQTT server");
     reconnect();
   } else {
+    //Serial.println("Registering device");
     registerDevice();
   }
   return true;
@@ -53,6 +62,7 @@ boolean HomeModule::loop()
 void HomeModule::reconnect() {
   char topic[50];
   // Loop until we're reconnected
+  Serial.println("Connecting to MQTT");
   while (!_mqClient->connected()) {
     Serial.print("Attempting MQTT connection to ");
     Serial.print( _mqttServer );

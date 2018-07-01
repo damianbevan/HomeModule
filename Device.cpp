@@ -70,7 +70,8 @@ boolean Device::processMessage(char* json)
 			int numberOfElements = lights_on.size();
 			for (int i = 0; i < numberOfElements; i++) {
 				if (lights_on[i] < MAX_LEDS) {
-					ledMessage.on[lights_on[i]] = true;
+          int arrayValue = lights_on[i];
+					ledMessage.on[arrayValue] = true;
 				}
 			}
 
@@ -78,7 +79,8 @@ boolean Device::processMessage(char* json)
 			numberOfElements = lights_off.size();
 			for (int i = 0; i < numberOfElements; i++) {
 				if (lights_off[i] < MAX_LEDS) {
-					ledMessage.off[lights_off[i]] = true;
+        int arrayValue = lights_off[i];
+					ledMessage.off[arrayValue] = true;
 				}
 			}
 			/* Future JSON fields

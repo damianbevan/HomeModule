@@ -6,7 +6,7 @@
 #include <ESP8266WiFi.h>
 
 #define HM_MQTT_REGISTRATION_TOPIC "home/devices/register" // The name of the registration topic
-#define HM_MQTT_SERVER "broker.hivemq.com"                 // The MQTT broker hostname
+//#define HM_MQTT_SERVER "broker.hivemq.com"                 // The MQTT broker hostname
 #define HM_REGISTER_POLL_MILLISECONDS 60000                // The frequency the device publishes a registration message
 
 /* Device Constants */

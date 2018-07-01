@@ -3,6 +3,7 @@
  */
 #include "homemoduleconfig.h"
 #include "homemodule.h"
+#include "Device.h"
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
 #include <ESP8266mDNS.h>
@@ -31,6 +32,9 @@ const char* DEVICE_KEY = HM_DEVICE_1_JWT_KEY;         // Device JWT authn/authz 
 ESP8266WiFiMulti wifiMulti;
 WiFiClient espClient;
 HomeModule homeModule( HM_MQTT_SERVER, mqCallback, espClient );
+Device device( MDNS_NAME, "1" );
+LEDController ledController;
+
 //PubSubClient mqClient(espClient);
 
 /* Local Variables */
@@ -45,6 +49,7 @@ void setup() {
   setupHomeModule();
 //  setupMQTT();
   setupGPIO();
+  setupDevice();
   // Start the HTTP server
 /*  server.on("/", HTTP_GET, handleRoot);
   server.on("/LED", HTTP_POST, handleLED);
@@ -79,11 +84,17 @@ void mqCallback(char* topic, byte* payload, unsigned int length)
     digitalWrite(LED_BUILTIN, HIGH);     // Turn the LED off by making the voltage HIGH
     Serial.println("LED_BUILTIN=OFF");
   }
+  device.processMessage((char*)payload);
 }
 
 void setupHomeModule()
 {
   homeModule.setupHomeModule( MDNS_NAME, DEVICE_TYPE, DEVICE_LOCATION, WiFi.localIP() );
+}
+
+void setupDevice()
+{
+  device.setLEDController( &ledController );
 }
 
 void setupmDNS()
@@ -110,8 +121,8 @@ void setupGPIO()
 void setupWifi()
 {
   // Add wifi Access Points to wifi
-    wifiMulti.addAP( HM_WIFI_SSID_PHONE, HM_WIFI_PWD_PHONE ); // Phone
-    //wifiMulti.addAP( HM_WIFI_SSID_HOME, HM_WIFI_PWD_HOME ); // Home
+    //wifiMulti.addAP( HM_WIFI_SSID_PHONE, HM_WIFI_PWD_PHONE ); // Phone
+    wifiMulti.addAP( HM_WIFI_SSID_HOME, HM_WIFI_PWD_HOME ); // Home
   
   // Connect to WiFi network
   Serial.print("Connecting to wifi...");

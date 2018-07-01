@@ -68,11 +68,9 @@ boolean LEDController::calculateMaxPowerExceeded(LEDMessage * ledMessage)
     if (ledMessage->on[i]) {
       ledStateCopy[i] = LED_ON;
     }
-  }
-  for (int i = 0; i < MAX_LEDS; i++) {
-    if (ledMessage->off[i]) {
-      ledStateCopy[i] = LED_OFF;
-    }
+	if (ledMessage->off[i]) {
+		ledStateCopy[i] = LED_OFF;
+	}
   }
 
   // Loop through and add up total LED current
@@ -88,6 +86,9 @@ boolean LEDController::calculateMaxPowerExceeded(LEDMessage * ledMessage)
     currentExceeded = true;
     printf("MAXIMUM CURRENT EXCEEDED ON LED DISPLAY. Current: %dmA\n", totalCurrentMA);
   }
+
+  // Free memory and return
+  free(ledStateCopy);
 
   return currentExceeded;
 }
